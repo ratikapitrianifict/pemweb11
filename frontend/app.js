@@ -1,121 +1,107 @@
 /**
- * TaskLab / ProductLab - Frontend AJAX Client
- * Menghubungkan Frontend ke Backend REST API menggunakan fetch()
+ * ProductLab - Tailwind Product Dashboard
+ * Modul 11D: Responsive Product Dashboard (Powered by AJAX Fetch)
  */
 
-const API_BASE = '../backend/api/tasks';
+const API_URL = '../backend/api/tasks';
 
-// DOM Elements
-const totalCountEl = document.getElementById('totalCount');
-const doneCountEl = document.getElementById('doneCount');
-const pendingCountEl = document.getElementById('pendingCount');
-const productsGridEl = document.getElementById('productsGrid');
-const tableBodyEl = document.getElementById('tableBody');
-const productFormEl = document.getElementById('productForm');
-const alertBoxEl = document.getElementById('alertBox');
-const modalEl = document.getElementById('detailModal');
-const modalContentEl = document.getElementById('modalContent');
+// Elements
+const totalProductStat = document.getElementById('totalProductStat');
+const stockReadyStat = document.getElementById('stockReadyStat');
+const categoriesStat = document.getElementById('categoriesStat');
+const productsGrid = document.getElementById('productsGrid');
+const inventoryTableBody = document.getElementById('inventoryTableBody');
+const addProductForm = document.getElementById('addProductForm');
+const alertBox = document.getElementById('alertBox');
+const detailModal = document.getElementById('detailModal');
+const detailModalContent = document.getElementById('detailModalContent');
 
-// 1. Fetch & Render All Data
-async function loadData() {
+// Format Currency
+function formatRupiah(num) {
+    const val = Number(num) || 0;
+    return 'Rp' + val.toLocaleString('id-ID');
+}
+
+// 1. Fetch & Render All Products
+async function loadProducts() {
     try {
-        const response = await fetch(`${API_BASE}/read.php`);
-        const result = await response.json();
+        const res = await fetch(`${API_URL}/read.php`);
+        const result = await res.json();
 
         if (result.success && Array.isArray(result.data)) {
             renderDashboard(result.data);
         } else {
-            showAlert('Gagal memuat data dari server.', 'error');
+            console.error('API Error:', result.message);
         }
-    } catch (error) {
-        console.error('Fetch error:', error);
-        showAlert('Tidak dapat terhubung ke Backend API.', 'error');
+    } catch (err) {
+        console.error('Fetch error:', err);
     }
 }
 
-// 2. Render UI Components
-function renderDashboard(tasks) {
-    // A. Update Statistics
-    const total = tasks.length;
-    const done = tasks.filter(t => t.status === 'done').length;
-    const pending = tasks.filter(t => t.status === 'pending').length;
+// 2. Render UI
+function renderDashboard(products) {
+    // A. Statistics
+    const totalCount = products.length;
+    const totalStock = products.reduce((acc, p) => acc + (Number(p.stock) || 0), 0);
+    const uniqueCategories = new Set(products.map(p => p.category || 'Elektronik')).size;
 
-    totalCountEl.textContent = total;
-    doneCountEl.textContent = done;
-    pendingCountEl.textContent = pending;
+    totalProductStat.textContent = totalCount;
+    stockReadyStat.textContent = totalStock;
+    categoriesStat.textContent = uniqueCategories || 1;
 
-    // B. Render Cards
-    if (tasks.length === 0) {
-        productsGridEl.innerHTML = `
+    // B. Product Cards (Modul 11D Checkpoint 6)
+    if (products.length === 0) {
+        productsGrid.innerHTML = `
             <div class="col-span-full py-12 text-center text-slate-400 bg-white rounded-xl border border-dashed border-slate-200">
-                Belum ada data task/produk. Tambahkan melalui form di bawah.
+                Belum ada produk yang terdaftar. Tambahkan melalui form di bawah.
             </div>
         `;
     } else {
-        productsGridEl.innerHTML = tasks.map(task => {
-            const isDone = task.status === 'done';
-            const statusBadge = isDone 
-                ? '<span class="px-2 py-0.5 text-xs font-semibold rounded bg-emerald-100 text-emerald-800">Done</span>' 
-                : '<span class="px-2 py-0.5 text-xs font-semibold rounded bg-amber-100 text-amber-800">Pending</span>';
+        productsGrid.innerHTML = products.map(product => {
+            const img = product.image && product.image.trim() !== '' 
+                ? product.image 
+                : `https://placehold.co/600x360?text=${encodeURIComponent(product.title)}`;
 
             return `
                 <article class="overflow-hidden rounded-xl bg-white shadow-sm border border-slate-200 flex flex-col justify-between">
-                    <div class="h-40 bg-slate-800 flex items-center justify-center text-slate-300 font-mono text-sm px-4 text-center">
-                        <div>
-                            <div class="text-xs text-slate-400 mb-1">TASK ID #${escapeHtml(task.id)}</div>
-                            <div class="font-bold text-white text-base">${escapeHtml(task.title)}</div>
-                        </div>
-                    </div>
+                    <img src="${escapeHtml(img)}"
+                         alt="${escapeHtml(product.title)}"
+                         class="h-44 w-full object-cover"
+                         loading="lazy"
+                         onerror="this.src='https://placehold.co/600x360?text=${encodeURIComponent(product.title)}'"
+                    >
                     <div class="p-5 flex-1 flex flex-col justify-between">
                         <div>
-                            <div class="flex items-center justify-between mb-2">
-                                <span class="text-xs text-slate-400">${escapeHtml(task.created_at || '-')}</span>
-                                ${statusBadge}
-                            </div>
-                            <h3 class="text-lg font-semibold text-slate-900">${escapeHtml(task.title)}</h3>
-                            <p class="mt-2 text-sm text-slate-600 line-clamp-2">
-                                ${escapeHtml(task.description || 'Tidak ada deskripsi.')}
-                            </p>
+                            <p class="text-sm text-slate-500">${escapeHtml(product.category || 'Elektronik')}</p>
+                            <h3 class="mt-1 text-lg font-semibold text-slate-900">${escapeHtml(product.title)}</h3>
+                            <p class="mt-3 font-bold text-slate-900">${formatRupiah(product.price)}</p>
                         </div>
-                        <div class="mt-4 flex gap-2">
-                            <button onclick="showDetail(${task.id})" class="flex-1 px-3 py-2 rounded-lg bg-slate-900 text-white text-sm font-semibold hover:bg-slate-700 transition">
-                                Detail
-                            </button>
-                            <button onclick="toggleStatus(${task.id}, '${escapeHtml(task.title)}', '${escapeHtml(task.description || '')}', '${task.status}')" class="px-3 py-2 rounded-lg border border-slate-300 text-slate-700 text-sm font-semibold hover:bg-slate-50 transition" title="Ubah Status">
-                                ${isDone ? 'Set Pending' : 'Set Done'}
-                            </button>
-                        </div>
+                        <button onclick="showDetail(${product.id})" class="mt-4 w-full px-4 py-2 rounded-lg bg-slate-900 text-white font-semibold hover:bg-slate-700 transition cursor-pointer">
+                            Detail Product
+                        </button>
                     </div>
                 </article>
             `;
         }).join('');
     }
 
-    // C. Render Table
-    if (tasks.length === 0) {
-        tableBodyEl.innerHTML = `
+    // C. Inventory Table (Modul 11D Checkpoint 9)
+    if (products.length === 0) {
+        inventoryTableBody.innerHTML = `
             <tr>
-                <td colspan="5" class="px-4 py-8 text-center text-slate-400">Data inventaris masih kosong.</td>
+                <td colspan="5" class="px-4 py-8 text-center text-slate-400">Data inventaris kosong.</td>
             </tr>
         `;
     } else {
-        tableBodyEl.innerHTML = tasks.map(task => {
-            const isDone = task.status === 'done';
-            const statusBadge = isDone 
-                ? '<span class="inline-block px-2.5 py-1 text-xs font-semibold rounded-full bg-emerald-100 text-emerald-800">done</span>' 
-                : '<span class="inline-block px-2.5 py-1 text-xs font-semibold rounded-full bg-amber-100 text-amber-800">pending</span>';
-
+        inventoryTableBody.innerHTML = products.map(product => {
             return `
                 <tr class="border-t border-slate-200 hover:bg-slate-50 transition">
-                    <td class="px-4 py-3 font-semibold text-slate-900">#${escapeHtml(task.id)}</td>
-                    <td class="px-4 py-3 font-medium text-slate-800">${escapeHtml(task.title)}</td>
-                    <td class="px-4 py-3 text-slate-600 max-w-xs truncate">${escapeHtml(task.description || '-')}</td>
-                    <td class="px-4 py-3">${statusBadge}</td>
-                    <td class="px-4 py-3 text-right space-x-2">
-                        <button onclick="showDetail(${task.id})" class="text-blue-600 hover:text-blue-800 text-xs font-semibold">
-                            Detail
-                        </button>
-                        <button onclick="deleteTask(${task.id})" class="text-rose-600 hover:text-rose-800 text-xs font-semibold">
+                    <td class="px-4 py-3 font-medium text-slate-900">${escapeHtml(product.title)}</td>
+                    <td class="px-4 py-3 text-slate-600">${escapeHtml(product.category || 'Elektronik')}</td>
+                    <td class="px-4 py-3 font-semibold text-slate-800">${formatRupiah(product.price)}</td>
+                    <td class="px-4 py-3 text-slate-700">${Number(product.stock) || 0}</td>
+                    <td class="px-4 py-3 text-right">
+                        <button onclick="deleteProduct(${product.id}, '${escapeHtml(product.title)}')" class="text-rose-600 hover:text-rose-800 text-xs font-semibold cursor-pointer">
                             Hapus
                         </button>
                     </td>
@@ -125,51 +111,123 @@ function renderDashboard(tasks) {
     }
 }
 
-// 3. Create Task via AJAX
-productFormEl.addEventListener('submit', async (e) => {
+// 3. Add Product via AJAX Form (Modul 11D Checkpoint 10)
+addProductForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const title = document.getElementById('inputTitle').value.trim();
-    const description = document.getElementById('inputDesc').value.trim();
-    const status = document.getElementById('inputStatus').value;
+    const title = document.getElementById('inputName').value.trim();
+    const category = document.getElementById('inputCategory').value;
+    const price = document.getElementById('inputPrice').value;
+    const stock = document.getElementById('inputStock').value;
 
-    if (!title) {
-        showAlert('Judul task/produk wajib diisi!', 'error');
+    if (!title || !price || !stock) {
+        showAlert('Semua field wajib diisi!', 'error');
         return;
+    }
+
+    // Auto assign image for laptops/keyboards/mouse if available
+    let image = '';
+    const lower = title.toLowerCase();
+    if (lower.includes('laptop') || lower.includes('macbook') || lower.includes('notebook')) {
+        image = 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=600&auto=format&fit=crop';
+    } else if (lower.includes('keyboard')) {
+        image = 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=600&auto=format&fit=crop';
+    } else if (lower.includes('mouse')) {
+        image = 'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=600&auto=format&fit=crop';
+    } else if (lower.includes('monitor') || lower.includes('screen')) {
+        image = 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=600&auto=format&fit=crop';
+    } else if (lower.includes('stand')) {
+        image = 'https://images.unsplash.com/photo-1616353071588-708dcff912e2?w=600&auto=format&fit=crop';
+    } else {
+        image = `https://placehold.co/600x360?text=${encodeURIComponent(title)}`;
     }
 
     const formData = new URLSearchParams();
     formData.append('title', title);
-    formData.append('description', description);
-    formData.append('status', status);
+    formData.append('category', category);
+    formData.append('price', price);
+    formData.append('stock', stock);
+    formData.append('image', image);
+    formData.append('description', `Produk kategori ${category} dengan harga ${formatRupiah(price)}.`);
+    formData.append('status', 'ready');
 
     try {
-        const response = await fetch(`${API_BASE}/create.php`, {
+        const res = await fetch(`${API_URL}/create.php`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: formData.toString()
         });
+        const result = await res.json();
 
-        const result = await response.json();
-
-        if (response.status === 201 && result.success) {
-            showAlert(`Berhasil! ${result.message} (ID: ${result.data.id})`, 'success');
-            productFormEl.reset();
-            loadData(); // reload data tanpa refresh halaman
+        if (res.status === 201 && result.success) {
+            showAlert(`Produk "${title}" berhasil disimpan!`, 'success');
+            addProductForm.reset();
+            loadProducts();
+            // Scroll to products
+            const productsSection = document.getElementById('products');
+            if (productsSection) {
+                productsSection.scrollIntoView({ behavior: 'smooth' });
+            }
         } else {
-            showAlert(result.message || 'Gagal menambahkan data.', 'error');
+            showAlert(result.message || 'Gagal menyimpan produk.', 'error');
         }
-    } catch (error) {
-        console.error('Create error:', error);
-        showAlert('Terjadi kesalahan koneksi saat mengirim data.', 'error');
+    } catch (err) {
+        console.error('Save error:', err);
+        showAlert('Terjadi kesalahan jaringan saat menyimpan produk.', 'error');
     }
 });
 
-// 4. Delete Task via AJAX
-async function deleteTask(id) {
-    if (!confirm(`Yakin ingin menghapus task #${id}?`)) {
+// 4. Detail Product Modal
+async function showDetail(id) {
+    try {
+        const res = await fetch(`${API_URL}/detail.php?id=${id}`);
+        const result = await res.json();
+
+        if (result.success && result.data) {
+            const p = result.data;
+            const img = p.image && p.image.trim() !== '' 
+                ? p.image 
+                : `https://placehold.co/600x360?text=${encodeURIComponent(p.title)}`;
+
+            detailModalContent.innerHTML = `
+                <div class="overflow-hidden rounded-xl border border-slate-200 mb-4">
+                    <img src="${escapeHtml(img)}" alt="${escapeHtml(p.title)}" class="h-48 w-full object-cover">
+                </div>
+                <div class="mb-4">
+                    <span class="text-xs font-semibold px-2.5 py-1 bg-blue-50 text-blue-700 rounded-md uppercase tracking-wider">
+                        ${escapeHtml(p.category || 'Elektronik')}
+                    </span>
+                    <h3 class="text-2xl font-bold text-slate-900 mt-2">${escapeHtml(p.title)}</h3>
+                    <p class="text-xl font-extrabold text-blue-600 mt-1">${formatRupiah(p.price)}</p>
+                </div>
+                <div class="space-y-2 text-sm text-slate-600 border-t border-slate-100 pt-3">
+                    <div class="flex justify-between">
+                        <span>Stok Tersedia:</span>
+                        <strong class="text-slate-900 font-semibold">${Number(p.stock) || 0} unit</strong>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Status Inventaris:</span>
+                        <span class="text-emerald-600 font-semibold uppercase text-xs">Ready</span>
+                    </div>
+                    ${p.description ? `<p class="mt-2 text-xs text-slate-500 bg-slate-50 p-2.5 rounded-lg border border-slate-100">${escapeHtml(p.description)}</p>` : ''}
+                </div>
+            `;
+            detailModal.classList.remove('hidden');
+            detailModal.classList.add('flex');
+        }
+    } catch (err) {
+        console.error('Detail error:', err);
+    }
+}
+
+function closeDetailModal() {
+    detailModal.classList.add('hidden');
+    detailModal.classList.remove('flex');
+}
+
+// 5. Delete Product via AJAX
+async function deleteProduct(id, name) {
+    if (!confirm(`Hapus produk "${name}" dari inventaris?`)) {
         return;
     }
 
@@ -177,119 +235,39 @@ async function deleteTask(id) {
     formData.append('id', id);
 
     try {
-        const response = await fetch(`${API_BASE}/delete.php`, {
+        const res = await fetch(`${API_URL}/delete.php`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: formData.toString()
         });
-
-        const result = await response.json();
-
-        if (result.success) {
-            showAlert('Task berhasil dihapus dari database.', 'success');
-            loadData();
-        } else {
-            showAlert(result.message || 'Gagal menghapus task.', 'error');
-        }
-    } catch (error) {
-        console.error('Delete error:', error);
-        showAlert('Kesalahan koneksi saat menghapus task.', 'error');
-    }
-}
-
-// 5. Toggle Status via AJAX
-async function toggleStatus(id, title, description, currentStatus) {
-    const newStatus = currentStatus === 'done' ? 'pending' : 'done';
-
-    const formData = new URLSearchParams();
-    formData.append('id', id);
-    formData.append('title', title);
-    formData.append('description', description);
-    formData.append('status', newStatus);
-
-    try {
-        const response = await fetch(`${API_BASE}/update.php`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: formData.toString()
-        });
-
-        const result = await response.json();
+        const result = await res.json();
 
         if (result.success) {
-            showAlert(`Status #${id} diubah menjadi ${newStatus}.`, 'success');
-            loadData();
+            showAlert(`Produk "${name}" telah dihapus.`, 'success');
+            loadProducts();
         } else {
-            showAlert(result.message || 'Gagal mengubah status.', 'error');
+            showAlert(result.message || 'Gagal menghapus produk.', 'error');
         }
-    } catch (error) {
-        console.error('Update error:', error);
-        showAlert('Kesalahan koneksi saat memperbarui status.', 'error');
+    } catch (err) {
+        console.error('Delete error:', err);
+        showAlert('Gagal menghapus produk karena gangguan jaringan.', 'error');
     }
 }
 
-// 6. Fetch Single Detail via AJAX (detail.php?id=...)
-async function showDetail(id) {
-    try {
-        const response = await fetch(`${API_BASE}/detail.php?id=${id}`);
-        const result = await response.json();
-
-        if (result.success && result.data) {
-            const task = result.data;
-            modalContentEl.innerHTML = `
-                <div class="mb-4">
-                    <span class="text-xs font-mono uppercase px-2 py-1 bg-slate-100 text-slate-600 rounded">ID: #${escapeHtml(task.id)}</span>
-                    <h3 class="text-2xl font-bold text-slate-900 mt-2">${escapeHtml(task.title)}</h3>
-                </div>
-                <div class="space-y-3 text-sm text-slate-700">
-                    <div>
-                        <strong class="text-slate-500 block text-xs">Deskripsi:</strong>
-                        <p class="mt-1 bg-slate-50 p-3 rounded-lg border border-slate-200">${escapeHtml(task.description || '-')}</p>
-                    </div>
-                    <div class="flex justify-between items-center py-2 border-t border-slate-100">
-                        <strong class="text-slate-500 text-xs">Status:</strong>
-                        <span class="font-semibold ${task.status === 'done' ? 'text-emerald-600' : 'text-amber-600'} uppercase text-xs">${escapeHtml(task.status)}</span>
-                    </div>
-                    <div class="flex justify-between items-center py-2 border-t border-slate-100">
-                        <strong class="text-slate-500 text-xs">Dibuat pada:</strong>
-                        <span class="text-slate-600">${escapeHtml(task.created_at || '-')}</span>
-                    </div>
-                </div>
-            `;
-            modalEl.classList.remove('hidden');
-            modalEl.classList.add('flex');
-        } else {
-            showAlert('Detail task tidak ditemukan.', 'error');
-        }
-    } catch (error) {
-        console.error('Detail error:', error);
-        showAlert('Gagal mengambil data detail.', 'error');
-    }
-}
-
-function closeModal() {
-    modalEl.classList.add('hidden');
-    modalEl.classList.remove('flex');
-}
-
-// Helper: Alert notification
+// Alert Toast Helper
 function showAlert(message, type = 'success') {
-    alertBoxEl.textContent = message;
-    alertBoxEl.className = type === 'success' 
+    alertBox.textContent = message;
+    alertBox.className = type === 'success'
         ? 'mb-6 p-4 rounded-xl text-sm font-medium bg-emerald-50 text-emerald-800 border border-emerald-200'
         : 'mb-6 p-4 rounded-xl text-sm font-medium bg-rose-50 text-rose-800 border border-rose-200';
-    alertBoxEl.classList.remove('hidden');
+    alertBox.classList.remove('hidden');
 
     setTimeout(() => {
-        alertBoxEl.classList.add('hidden');
+        alertBox.classList.add('hidden');
     }, 4000);
 }
 
-// Helper: Escape HTML string to prevent XSS
+// XSS Sanitizer
 function escapeHtml(str) {
     if (str === null || str === undefined) return '';
     return String(str)
@@ -300,5 +278,5 @@ function escapeHtml(str) {
         .replace(/'/g, '&#039;');
 }
 
-// Initialize on DOM Ready
-document.addEventListener('DOMContentLoaded', loadData);
+// Load on DOM ready
+document.addEventListener('DOMContentLoaded', loadProducts);

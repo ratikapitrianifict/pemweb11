@@ -13,7 +13,7 @@ if ($id <= 0) {
 }
 
 $stmt = $conn->prepare(
-    "SELECT id, title, description, status, created_at
+    "SELECT id, title, category, price, stock, image, description, status, created_at
     FROM tasks
     WHERE id = ?
     LIMIT 1"

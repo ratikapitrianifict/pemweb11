@@ -7,26 +7,32 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
 }
 
 $title = trim($_POST["title"] ?? "");
+$category = trim($_POST["category"] ?? "Elektronik");
+$price = (int)($_POST["price"] ?? 0);
+$stock = (int)($_POST["stock"] ?? 0);
+$image = trim($_POST["image"] ?? "");
 $description = trim($_POST["description"] ?? "");
-$status = trim($_POST["status"] ?? "pending");
+$status = trim($_POST["status"] ?? "ready");
 
-$allowedStatus = ["pending", "done"];
-
-if ($title === "") {
-    sendJson(400, false, "Title wajib diisi");
+if ($image === "") {
+    $image = "https://placehold.co/600x360?text=" . urlencode($title);
 }
 
-if (!in_array($status, $allowedStatus, true)) {
-    sendJson(400, false, "Status tidak valid");
+if ($title === "") {
+    sendJson(400, false, "Product / Title wajib diisi");
 }
 
 $stmt = $conn->prepare(
-    "INSERT INTO tasks (title, description, status)
-    VALUES (?, ?, ?)"
+    "INSERT INTO tasks (title, category, price, stock, image, description, status)
+    VALUES (?, ?, ?, ?, ?, ?, ?)"
 );
 $stmt->bind_param(
-    "sss",
+    "ssiisss",
     $title,
+    $category,
+    $price,
+    $stock,
+    $image,
     $description,
     $status
 );

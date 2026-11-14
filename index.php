@@ -15,10 +15,10 @@
                 Web Programming 1
             </span>
             <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900">
-                Fullstack Lab Project
+                Product Dashboard &amp; API Lab
             </h1>
             <p class="mt-2 text-slate-600 text-base sm:text-lg">
-                Pemisahan Modul Backend (JSON API &amp; MySQL) dan Frontend (Tailwind CSS Dashboard)
+                Integrasi Modul 11B (Backend JSON API) dan Modul 11D (Frontend Tailwind CSS Dashboard)
             </p>
         </header>
 
@@ -35,10 +35,10 @@
                 </div>
                 <h2 class="text-xl font-bold text-slate-900 mb-2">Tailwind Product Dashboard</h2>
                 <p class="text-slate-600 text-sm mb-6 leading-relaxed">
-                    Antarmuka modern menggunakan Tailwind CSS Browser CDN yang mencakup Navbar, Statistik Grid, Kartu Produk, Tabel Inventaris, dan Form Produk.
+                    Tampilan dashboard produk (Laptop, Keyboard, Mouse, dll.) responsif berbasis utility-first Tailwind CSS, terhubung asinkron via AJAX (fetch).
                 </p>
                 <a href="frontend/index.html" class="inline-flex items-center justify-center w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl transition text-sm">
-                    Buka Frontend Dashboard &rarr;
+                    Buka Product Dashboard &rarr;
                 </a>
             </div>
 
@@ -50,9 +50,9 @@
                     </span>
                     <span class="text-xs text-slate-400">Modul 11B</span>
                 </div>
-                <h2 class="text-xl font-bold text-slate-900 mb-2">Task API &amp; Tester</h2>
+                <h2 class="text-xl font-bold text-slate-900 mb-2">REST API &amp; Tester</h2>
                 <p class="text-slate-600 text-sm mb-6 leading-relaxed">
-                    JSON Endpoints dengan PHP Native &amp; MySQLi (CRUD, Prepared Statements, HTTP Status Codes) dilengkapi halaman form tester bersih tanpa AJAX.
+                    JSON Endpoints dengan PHP Native &amp; MySQLi (CRUD, Prepared Statements, HTTP Status Codes) disertai form tester bersih.
                 </p>
                 <div class="flex flex-col sm:flex-row gap-2">
                     <a href="backend/tester/index.php" class="inline-flex items-center justify-center flex-1 py-2.5 px-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition text-sm">
@@ -68,14 +68,14 @@
 
         <!-- Quick API Endpoints Table -->
         <section class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
-            <h3 class="text-base font-bold text-slate-900 mb-3">Daftar Endpoint API (Backend)</h3>
+            <h3 class="text-base font-bold text-slate-900 mb-3">Daftar Endpoint API Produk (Backend)</h3>
             <div class="overflow-x-auto text-sm">
                 <table class="w-full text-left">
                     <thead class="bg-slate-50 text-slate-500 border-b border-slate-200">
                         <tr>
                             <th class="py-2.5 px-3">Method</th>
                             <th class="py-2.5 px-3">Endpoint Path</th>
-                            <th class="py-2.5 px-3">Aksi / Deskripsi</th>
+                            <th class="py-2.5 px-3">Deskripsi Operasi</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-100 text-slate-700 font-mono text-xs">
@@ -87,27 +87,27 @@
                         <tr>
                             <td class="py-2 px-3 text-blue-600 font-bold">GET</td>
                             <td class="py-2 px-3"><a href="backend/api/tasks/read.php" target="_blank" class="hover:underline">/backend/api/tasks/read.php</a></td>
-                            <td class="py-2 px-3 font-sans text-slate-500">Ambil seluruh data task</td>
+                            <td class="py-2 px-3 font-sans text-slate-500">Ambil daftar produk dari MySQL</td>
                         </tr>
                         <tr>
                             <td class="py-2 px-3 text-blue-600 font-bold">GET</td>
                             <td class="py-2 px-3"><a href="backend/api/tasks/detail.php?id=1" target="_blank" class="hover:underline">/backend/api/tasks/detail.php?id=1</a></td>
-                            <td class="py-2 px-3 font-sans text-slate-500">Ambil detail task berdasarkan ID</td>
+                            <td class="py-2 px-3 font-sans text-slate-500">Detail spesifikasi produk sesuai ID</td>
                         </tr>
                         <tr>
                             <td class="py-2 px-3 text-emerald-600 font-bold">POST</td>
                             <td class="py-2 px-3">/backend/api/tasks/create.php</td>
-                            <td class="py-2 px-3 font-sans text-slate-500">Tambah data task baru</td>
+                            <td class="py-2 px-3 font-sans text-slate-500">Tambah data produk baru</td>
                         </tr>
                         <tr>
                             <td class="py-2 px-3 text-amber-600 font-bold">POST</td>
                             <td class="py-2 px-3">/backend/api/tasks/update.php</td>
-                            <td class="py-2 px-3 font-sans text-slate-500">Perbarui task berdasarkan ID</td>
+                            <td class="py-2 px-3 font-sans text-slate-500">Perbarui data produk</td>
                         </tr>
                         <tr>
                             <td class="py-2 px-3 text-rose-600 font-bold">POST</td>
                             <td class="py-2 px-3">/backend/api/tasks/delete.php</td>
-                            <td class="py-2 px-3 font-sans text-slate-500">Hapus task berdasarkan ID</td>
+                            <td class="py-2 px-3 font-sans text-slate-500">Hapus produk dari database</td>
                         </tr>
                     </tbody>
                 </table>
@@ -122,4 +122,3 @@
 
 </body>
 </html>
-

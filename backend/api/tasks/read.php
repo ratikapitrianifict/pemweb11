@@ -7,7 +7,7 @@ if ($_SERVER["REQUEST_METHOD"] !== "GET") {
 }
 
 $result = $conn->query(
-    "SELECT id, title, description, status, created_at
+    "SELECT id, title, category, price, stock, image, description, status, created_at
     FROM tasks
     ORDER BY id DESC"
 );
