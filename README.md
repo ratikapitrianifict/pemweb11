@@ -58,14 +58,19 @@ Setiap endpoint menangani error secara terstruktur:
 * `405 Method Not Allowed`: Request menggunakan HTTP method yang tidak diizinkan.
 * `500 Internal Server Error`: Terjadi kegagalan pada operasi query database.
 
-#### 2. Frontend: Tailwind CSS Product Dashboard (Modul 11D)
-Dashboard modern berbasis utility-first Tailwind CSS (via Tailwind Play CDN):
+#### 2. Frontend: Tailwind CSS Product Dashboard & AJAX Client (Modul 11A + 11D)
+Dashboard modern berbasis utility-first Tailwind CSS (via Tailwind Play CDN) yang telah terhubung penuh ke Backend API menggunakan AJAX (`fetch()`):
+* **Integrasi AJAX Dinamis (`frontend/app.js`)**:
+  * Mengambil data secara asynchronous dari `/backend/api/tasks/read.php` untuk merender statistik, kartu produk, dan tabel inventaris tanpa page reload.
+  * Form penambahan data mengirim request `POST` via AJAX ke `/backend/api/tasks/create.php` dan memperbarui tampilan secara real-time.
+  * Aksi pengubahan status (`update.php`) dan penghapusan data (`delete.php`) dieksekusi secara instan via `fetch()`.
+  * Modal detail menampilkan data spesifik dari `/backend/api/tasks/detail.php?id=...`.
 * **Navbar**: Navigasi responsif dengan brand dan menu links.
-* **Header & Action**: Judul dashboard, deskripsi, dan tombol tambah produk.
-* **Grid Statistik**: Kartu ringkasan (*Total Product*, *Stock Ready*, *Categories*) dengan breakpoint responsif `grid-cols-1 md:grid-cols-3`.
-* **Katalog Produk (Cards)**: Grid kartu produk interaktif dengan gambar, badge kategori, harga, dan tombol detail.
-* **Tabel Inventaris**: Tabel data inventaris dengan `hover:bg-slate-50` dan kontainer `overflow-x-auto`.
-* **Form Tambah Produk**: Form input dengan grid responsif dan state interaktif (`focus:ring-2`, `focus:border-blue-500`).
+* **Header & Action**: Judul dashboard, deskripsi, dan tombol navigasi form.
+* **Grid Statistik**: Kartu ringkasan (*Total*, *Done*, *Pending*) yang ter-update otomatis.
+* **Katalog Produk (Cards)**: Grid kartu produk dinamis dengan ID, judul, deskripsi, badge status, dan tombol aksi.
+* **Tabel Inventaris**: Tabel data dengan aksi detail dan hapus per baris.
+* **Form Tambah Produk**: Form input dengan state interaktif (`focus:ring-2`, `focus:border-blue-500`) dan notifikasi alert.
 
 ---
 
