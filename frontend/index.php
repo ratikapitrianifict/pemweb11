@@ -29,6 +29,9 @@
                 </div>
             </div>
             <div class="flex items-center gap-3">
+                <a href="bootstrap.php" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-emerald-50 text-[#03AC0E] border border-emerald-200 hover:bg-emerald-100 transition">
+                    Versi Bootstrap 5
+                </a>
                 <a href="../backend/tester/index.php" class="text-xs font-semibold px-3 py-1.5 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 transition">
                     Backend Tester
                 </a>

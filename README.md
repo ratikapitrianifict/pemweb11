@@ -1,7 +1,7 @@
 # Web Programming 1 - Lab Project
-## Fullstack Architecture: Backend (JSON API & MySQL) & Frontend (Tailwind CSS Product Dashboard)
+## Fullstack Architecture: Backend (JSON API & MySQL) & Frontend (Tailwind CSS + Bootstrap 5 Product Dashboard)
 
-Repositori ini berisi integrasi tugas praktikum **Web Programming 1** yang telah dipisahkan secara modular ke dalam arsitektur **Backend** (Modul 11B - API Fundamentals) dan **Frontend** (Modul 11D - Tailwind CSS Fundamentals: Responsive Product Dashboard).
+Repositori ini berisi integrasi tugas praktikum **Web Programming 1** yang telah dipisahkan secara modular ke dalam arsitektur **Backend** (Modul 11B - API Fundamentals) dan **Frontend** dengan 2 pilihan implementasi: **Tailwind CSS** (Modul 11D - Responsive Product Dashboard) serta **Bootstrap 5**.
 
 ---
 
@@ -27,8 +27,9 @@ task-api-lab/
 │   │   └── style.css                      # Stylesheet terpisah form tester
 │   └── database.sql                       # Skema database api_lab & data produk
 │
-├── frontend/                              # MODUL 11D: Tailwind CSS Product Dashboard
-│   ├── index.php                          # Tailwind Product Dashboard (Modul 11D)
+├── frontend/                              # MODUL 11D & FRONTEND IMPLEMENTATIONS
+│   ├── index.php                          # Tailwind CSS Product Dashboard (Modul 11D)
+│   ├── bootstrap.php                      # Bootstrap 5 Product Dashboard
 │   └── app.js                             # AJAX Client (fetch) terhubung ke API backend
 │
 ├── database.sql                           # Salinan skema database root
@@ -41,7 +42,7 @@ task-api-lab/
 
 ### Data Produk (Modul 11D)
 
-Proyek ini menggunakan data nyata katalog produk sesuai Modul 11D (bukan tugas/tugas kuliah umum):
+Proyek ini menggunakan data nyata katalog produk sesuai Modul 11D (laptop, mouse, keyboard, monitor, dll.):
 
 | ID | Nama Produk | Kategori | Harga (Rp) | Stok | Deskripsi |
 | :-: | :--- | :--- | :--- | :-: | :--- |
@@ -56,16 +57,25 @@ Proyek ini menggunakan data nyata katalog produk sesuai Modul 11D (bukan tugas/t
 
 ### Output Praktik & Fitur
 
-#### 1. Frontend: Tailwind CSS Product Dashboard (Modul 11D)
-* **Navbar Utilities (Checkpoint 8)**: Navigasi responsif dengan brand `ProductLab` dan tautan menu.
-* **Flexbox Dashboard Header (Checkpoint 4 & 7)**: Judul dashboard dan tombol aksi `+ Tambah Product`.
-* **Grid Statistik (Checkpoint 5)**: Total Product, Stock Ready, dan Categories yang terhitung otomatis.
-* **Product Cards (Checkpoint 6)**: Tampilan kartu produk modern dengan gambar cover, kategori, nama, harga (Rupiah), dan tombol `Detail Product`.
-* **Responsive Table (Checkpoint 9)**: Tabel inventaris terbungkus `overflow-x-auto` menampilkan kolom Product, Category, Price, Stock, dan Hapus.
-* **Add Product Form (Checkpoint 10)**: Formulir penambahan produk dengan field Product Name, Category dropdown, Price, dan Stock.
-* **Integrasi AJAX Dinamis (`frontend/app.js`)**: Memuat data, menambah data, dan menghapus data secara asinkron tanpa *full page reload*.
+#### 1. Frontend: Tailwind CSS Product Dashboard (`frontend/index.php`) - Modul 11D
+* **Navbar Utilities (Checkpoint 8)**: Navigasi responsif dengan brand `ProductLab` dan tab Katalog / Inventaris / Tambah Produk.
+* **Flexbox Dashboard Header (Checkpoint 4 & 7)**: Judul dashboard dan tombol aksi `+ Tambah Produk Baru`.
+* **Grid Statistik (Checkpoint 5)**: Total Produk, Total Stok Siap, dan Kategori terhitung otomatis.
+* **Product Cards (Checkpoint 6)**: Tampilan kartu produk modern dengan gambar cover produk nyata, kategori badge, format Rupiah, dan tombol `Detail Produk`.
+* **Responsive Table (Checkpoint 9)**: Tabel inventaris terbungkus `overflow-x-auto` menampilkan kolom Product, Category, Price, Stock, dan Aksi Hapus.
+* **Add Product Form (Checkpoint 10)**: Formulir penambahan produk dengan input Name, Category, Price, Stock, Image URL, dan Deskripsi.
+* **Integrasi AJAX Dinamis (`frontend/app.js`)**: Memuat data katalog, filter kategori, pencarian inventaris, tambah produk, dan hapus data via API tanpa reload halaman.
 
-#### 2. Backend: REST API Endpoints (Modul 11B)
+#### 2. Frontend: Bootstrap 5 Product Dashboard (`frontend/bootstrap.php`)
+* **Bootstrap 5 UI Components**: Grid system (`row`, `col-md-*`), Cards, Modals, Navbar, Badges, Tables, dan Alert dinamis.
+* **Tokopedia Clean Theme**: Aksen hijau Tokopedia (`#03AC0E`), kartu putih clean berbayang halus, dan tanpa emoji.
+* **Fitur Terintegrasi AJAX**:
+  - Filter kategori instan (Semua, Elektronik, Aksesoris).
+  - Modal detail produk interaktif (Bootstrap Modal API).
+  - Form tambah produk langsung kirim via `fetch()`.
+  - Hapus produk langsung dengan notifikasi Toast/Alert Bootstrap.
+
+#### 3. Backend: REST API Endpoints (`backend/api/`) - Modul 11B
 * `GET /backend/api/hello.php`: Cek status server API.
 * `GET /backend/api/tasks/read.php`: Mengembalikan array seluruh katalog produk dari database.
 * `GET /backend/api/tasks/detail.php?id={id}`: Mengembalikan data spesifik satu produk.
@@ -81,6 +91,7 @@ Proyek ini menggunakan data nyata katalog produk sesuai Modul 11D (bukan tugas/t
    * Pastikan Apache & MySQL aktif di Laragon.
    * Import file `backend/database.sql` ke database `api_lab`.
 2. **Akses Aplikasi**:
-   * **Frontend Dashboard**: `http://localhost/task-api-lab/frontend/`
-   * **Portal Utama**: `http://localhost/task-api-lab/`
-   * **Backend API Tester**: `http://localhost/task-api-lab/backend/tester/`
+   * **Portal Navigasi Utama**: `http://localhost/task-api-lab/`
+   * **Frontend Versi Tailwind CSS**: `http://localhost/task-api-lab/frontend/index.php`
+   * **Frontend Versi Bootstrap 5**: `http://localhost/task-api-lab/frontend/bootstrap.php`
+   * **Backend API Tester**: `http://localhost/task-api-lab/backend/tester/index.php`

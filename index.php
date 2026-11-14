@@ -23,40 +23,63 @@
         </header>
 
         <!-- Navigation Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
             
-            <!-- Frontend Card -->
-            <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition">
-                <div class="flex items-center justify-between mb-4">
-                    <span class="px-2.5 py-1 bg-emerald-100 text-emerald-800 text-xs font-bold rounded">
-                        FRONTEND
-                    </span>
-                    <span class="text-xs text-slate-400">Modul 11D</span>
+            <!-- Frontend Card (Tailwind) -->
+            <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="px-2.5 py-1 bg-emerald-100 text-emerald-800 text-xs font-bold rounded">
+                            TAILWIND CSS
+                        </span>
+                        <span class="text-xs text-slate-400">Modul 11D</span>
+                    </div>
+                    <h2 class="text-xl font-bold text-slate-900 mb-2">Tailwind Dashboard</h2>
+                    <p class="text-slate-600 text-sm mb-6 leading-relaxed">
+                        Tampilan dashboard e-commerce responsif utility-first Tailwind CSS. Terhubung AJAX (fetch) ke API backend, bergaya Tokopedia clean.
+                    </p>
                 </div>
-                <h2 class="text-xl font-bold text-slate-900 mb-2">Tailwind Product Dashboard</h2>
-                <p class="text-slate-600 text-sm mb-6 leading-relaxed">
-                    Tampilan dashboard produk (Laptop, Keyboard, Mouse, dll.) responsif berbasis utility-first Tailwind CSS, terhubung asinkron via AJAX (fetch).
-                </p>
-                <a href="frontend/index.php" class="inline-flex items-center justify-center w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl transition text-sm">
-                    Buka Product Dashboard &rarr;
+                <a href="frontend/index.php" class="inline-flex items-center justify-center w-full py-2.5 px-4 bg-[#03AC0E] hover:bg-[#02960c] text-white font-semibold rounded-xl transition text-sm">
+                    Buka Versi Tailwind &rarr;
+                </a>
+            </div>
+
+            <!-- Frontend Card (Bootstrap 5) -->
+            <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="px-2.5 py-1 bg-purple-100 text-purple-800 text-xs font-bold rounded">
+                            BOOTSTRAP 5
+                        </span>
+                        <span class="text-xs text-slate-400">Framework</span>
+                    </div>
+                    <h2 class="text-xl font-bold text-slate-900 mb-2">Bootstrap Dashboard</h2>
+                    <p class="text-slate-600 text-sm mb-6 leading-relaxed">
+                        Tampilan dashboard produk alternatif menggunakan Bootstrap 5 komponen (Grid, Card, Modal, Badges, Table) + AJAX REST API terpisah.
+                    </p>
+                </div>
+                <a href="frontend/bootstrap.php" class="inline-flex items-center justify-center w-full py-2.5 px-4 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-xl transition text-sm">
+                    Buka Versi Bootstrap &rarr;
                 </a>
             </div>
 
             <!-- Backend Card -->
-            <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition">
-                <div class="flex items-center justify-between mb-4">
-                    <span class="px-2.5 py-1 bg-blue-100 text-blue-800 text-xs font-bold rounded">
-                        BACKEND
-                    </span>
-                    <span class="text-xs text-slate-400">Modul 11B</span>
+            <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="px-2.5 py-1 bg-blue-100 text-blue-800 text-xs font-bold rounded">
+                            BACKEND API
+                        </span>
+                        <span class="text-xs text-slate-400">Modul 11B</span>
+                    </div>
+                    <h2 class="text-xl font-bold text-slate-900 mb-2">REST API &amp; Tester</h2>
+                    <p class="text-slate-600 text-sm mb-6 leading-relaxed">
+                        JSON Endpoints PHP Native &amp; MySQLi (CRUD, Prepared Statements, HTTP Status Codes) disertai form tester bersih tanpa emoji.
+                    </p>
                 </div>
-                <h2 class="text-xl font-bold text-slate-900 mb-2">REST API &amp; Tester</h2>
-                <p class="text-slate-600 text-sm mb-6 leading-relaxed">
-                    JSON Endpoints dengan PHP Native &amp; MySQLi (CRUD, Prepared Statements, HTTP Status Codes) disertai form tester bersih.
-                </p>
                 <div class="flex flex-col sm:flex-row gap-2">
                     <a href="backend/tester/index.php" class="inline-flex items-center justify-center flex-1 py-2.5 px-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition text-sm">
-                        Buka API Tester &rarr;
+                        API Tester &rarr;
                     </a>
                     <a href="backend/api/tasks/read.php" target="_blank" class="inline-flex items-center justify-center py-2.5 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-xl transition text-sm">
                         Raw JSON
