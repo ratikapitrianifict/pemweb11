@@ -1,7 +1,7 @@
-# Web Programming 1 - Modul 11B
-## API Fundamentals: JSON Endpoint dengan PHP + MySQL
+# Web Programming 1 - Lab Project
+## Fullstack Architecture: Backend (JSON API & MySQL) & Frontend (Tailwind CSS Dashboard)
 
-Repositori ini berisi implementasi praktikum **Web Programming 1 (Modul 11B)** mengenai pembuatan JSON Endpoint / API sederhana menggunakan PHP Native dan MySQLi, disertai antarmuka pengujian (HTML Form Tester) yang terpisah.
+Repositori ini berisi integrasi tugas praktikum **Web Programming 1** yang telah dipisahkan secara modular ke dalam arsitektur **Backend** (Modul 11B - API Fundamentals) dan **Frontend** (Modul 11D - Tailwind CSS Fundamentals), dilengkapi portal navigasi terpadu.
 
 ---
 
@@ -9,86 +9,105 @@ Repositori ini berisi implementasi praktikum **Web Programming 1 (Modul 11B)** m
 
 ```text
 task-api-lab/
-├── database.sql               # Skema database api_lab dan tabel tasks
-├── config/
-│   ├── koneksi.php            # Konfigurasi koneksi MySQLi (utf8mb4)
-│   └── response.php           # Helper standarisasi JSON response & HTTP status
-├── api/
-│   ├── hello.php              # Endpoint pengetesan status API
-│   └── tasks/
-│       ├── read.php           # Endpoint GET semua task
-│       ├── detail.php         # Endpoint GET detail task berdasarkan ID
-│       ├── create.php         # Endpoint POST pembuatan task baru
-│       ├── update.php         # Endpoint POST pembaruan task
-│       └── delete.php         # Endpoint POST penghapusan task
-├── tester/
-│   ├── index.php              # Halaman form pengujian API (tanpa AJAX)
-│   └── style.css              # Stylesheet terpisah (clean & responsif)
-└── README.md
+│
+├── backend/                               # MODUL 11B: API Fundamentals
+│   ├── api/
+│   │   ├── hello.php                      # Endpoint status API (GET)
+│   │   └── tasks/
+│   │       ├── read.php                   # Endpoint GET seluruh task
+│   │       ├── detail.php                 # Endpoint GET detail task (?id=)
+│   │       ├── create.php                 # Endpoint POST buat task baru
+│   │       ├── update.php                 # Endpoint POST perbarui task
+│   │       └── delete.php                 # Endpoint POST hapus task
+│   ├── config/
+│   │   ├── koneksi.php                    # Inisialisasi koneksi MySQLi (utf8mb4)
+│   │   └── response.php                   # Helper modular sendJson() & HTTP status
+│   ├── tester/
+│   │   ├── index.php                      # Form pengujian API (clean UI, tanpa emoji)
+│   │   └── style.css                      # Stylesheet terpisah form tester
+│   └── database.sql                       # Skema database api_lab & tabel tasks
+│
+├── frontend/                              # MODUL 11D: Tailwind CSS Fundamentals
+│   └── index.html                         # Tailwind Product Dashboard responsif
+│
+├── database.sql                           # Salinan skema database root
+├── index.php                              # Portal landing page navigasi utama
+├── README.md                              # Dokumentasi lengkap proyek
+└── .gitignore                             # Berkas pengecualian Git
 ```
 
 ---
 
 ### Output Praktik
 
-Praktikum ini menghasilkan serangkaian endpoint API dengan HTTP Request-Response contract yang terstandarisasi:
+#### 1. Backend: API Endpoints & Request-Response Contract (Modul 11B)
+Seluruh endpoint di sisi backend menggunakan kontrak JSON murni dengan status code HTTP standar:
 
-| Endpoint | Method | Input / Parameter | Status Code | Keterangan Response |
+| Endpoint | Method | Parameter Input | Status Code | Keterangan Response |
 | :--- | :---: | :--- | :---: | :--- |
-| `/api/hello.php` | `GET` | - | `200 OK` | Informasi status API |
-| `/api/tasks/read.php` | `GET` | - | `200 OK` | Array seluruh data task |
-| `/api/tasks/detail.php` | `GET` | Query `id` | `200 OK` | Objek detail task sesuai ID |
-| `/api/tasks/create.php` | `POST` | `title`, `description`, `status` | `201 Created` | ID task baru yang dibuat |
-| `/api/tasks/update.php` | `POST` | `id`, `title`, `description`, `status` | `200 OK` | Konfirmasi task berhasil diperbarui |
-| `/api/tasks/delete.php` | `POST` | `id` | `200 OK` | Konfirmasi task berhasil dihapus |
+| `/backend/api/hello.php` | `GET` | - | `200 OK` | Info status & versi API |
+| `/backend/api/tasks/read.php` | `GET` | - | `200 OK` | Array seluruh record task |
+| `/backend/api/tasks/detail.php` | `GET` | Query `id` | `200 OK` | Detail task spesifik sesuai ID |
+| `/backend/api/tasks/create.php` | `POST` | `title`, `description`, `status` | `201 Created` | ID task baru yang berhasil dibuat |
+| `/backend/api/tasks/update.php` | `POST` | `id`, `title`, `description`, `status` | `200 OK` | Pesan konfirmasi pembaruan |
+| `/backend/api/tasks/delete.php` | `POST` | `id` | `200 OK` | Pesan konfirmasi penghapusan |
 
-Setiap endpoint juga mengembalikan response error terstruktur:
-* `400 Bad Request`: Input tidak valid (misal: ID tidak valid, judul kosong, status bukan `pending`/`done`).
-* `404 Not Found`: Data task yang dicari/diupdate/dihapus tidak ditemukan di database.
-* `405 Method Not Allowed`: Pemanggilan endpoint menggunakan HTTP method yang tidak diizinkan.
-* `500 Internal Server Error`: Kegagalan eksekusi query pada database.
+Setiap endpoint menangani error secara terstruktur:
+* `400 Bad Request`: Field input wajib tidak diisi, ID tidak valid, atau nilai enum status tidak sesuai.
+* `404 Not Found`: Task yang diminta tidak ditemukan di database.
+* `405 Method Not Allowed`: Request menggunakan HTTP method yang tidak diizinkan.
+* `500 Internal Server Error`: Terjadi kegagalan pada operasi query database.
+
+#### 2. Frontend: Tailwind CSS Product Dashboard (Modul 11D)
+Dashboard modern berbasis utility-first Tailwind CSS (via Tailwind Play CDN):
+* **Navbar**: Navigasi responsif dengan brand dan menu links.
+* **Header & Action**: Judul dashboard, deskripsi, dan tombol tambah produk.
+* **Grid Statistik**: Kartu ringkasan (*Total Product*, *Stock Ready*, *Categories*) dengan breakpoint responsif `grid-cols-1 md:grid-cols-3`.
+* **Katalog Produk (Cards)**: Grid kartu produk interaktif dengan gambar, badge kategori, harga, dan tombol detail.
+* **Tabel Inventaris**: Tabel data inventaris dengan `hover:bg-slate-50` dan kontainer `overflow-x-auto`.
+* **Form Tambah Produk**: Form input dengan grid responsif dan state interaktif (`focus:ring-2`, `focus:border-blue-500`).
 
 ---
 
 ### Improvement Backend
 
-1. **Modular JSON Response Helper (`config/response.php`)**:
-   * Membungkus fungsi `sendJson($statusCode, $success, $message, $data)` untuk memastikan seluruh endpoint mengirimkan struktur JSON yang seragam (`success`, `message`, `data`).
-   * Mengatur header `Content-Type: application/json; charset=utf-8` dan HTTP status code secara otomatis serta menghentikan script (`exit`).
-2. **Prepared Statements (MySQLi)**:
-   * Seluruh query parameter pada operasi `detail.php`, `create.php`, `update.php`, dan `delete.php` menggunakan `prepare()` dan `bind_param()` untuk mencegah celah keamanan *SQL Injection*.
-3. **HTTP Method Guarding**:
-   * Setiap endpoint memeriksa `$_SERVER["REQUEST_METHOD"]` dan menolak method yang tidak sesuai dengan mengembalikan status `405 Method Not Allowed`.
-4. **Validasi Input & Whitelist**:
-   * Memvalidasi input wajib, sanitasi string dengan `trim()`, dan validasi status menggunakan whitelist (`['pending', 'done']`).
-5. **Verifikasi Keberadaan Data (Pre-check)**:
-   * Pada endpoint `update.php` dan `delete.php`, server memeriksa terlebih dahulu apakah ID task ada sebelum menjalankan query modifikasi, mengembalikan `404 Not Found` jika tidak ada.
+1. **Helper JSON Terpusat (`backend/config/response.php`)**:
+   * Fungsi `sendJson()` mengatur header `Content-Type: application/json; charset=utf-8` dan status code HTTP dinamis, menjamin konsistensi payload (`success`, `message`, `data`).
+2. **Keamanan Prepared Statements**:
+   * Menghindari serangan *SQL Injection* pada seluruh endpoint manipulasi data (`detail.php`, `create.php`, `update.php`, `delete.php`) menggunakan MySQLi prepared statements (`prepare()` dan `bind_param()`).
+3. **HTTP Method Guard**:
+   * Memvalidasi metode request pada setiap file PHP untuk mencegah bypass metode HTTP (`405 Method Not Allowed`).
+4. **Validasi Input & Pre-checking**:
+   * Sanitasi data dengan `trim()`, validasi status whitelist (`pending`, `done`), serta pengecekan keberadaan record sebelum eksekusi update/delete (`404 Not Found`).
 
 ---
 
-### Improvement Frontend (Tester)
+### Improvement Frontend
 
-1. **Pemisahan Kode & Stylesheet**:
-   * CSS dipisahkan secara modular ke file [tester/style.css](tester/style.css), menjaga file HTML tetap bersih, terstruktur, dan mudah dipelihara.
-2. **Desain Clean & Minimalis**:
-   * Menghilangkan emoji dan teks teknis yang berlebihan pada UI untuk menciptakan antarmuka yang profesional dan rapi.
-3. **Konsistensi Warna & Elemen Interaktif**:
-   * Menstandarisasi tombol aksi utama (seperti *Cek Detail*, *Tambah Task*, dan *Update Task*) menggunakan warna `#3b82f6` dengan efek hover `#2563eb`.
-4. **Layout Responsif Berbasis Kartu**:
-   * Menggunakan CSS Grid dengan pengelompokan operasi kartu (*Read*, *Tambah*, *Update*, *Hapus*) yang responsif di berbagai ukuran layar.
-5. **Testing Tab Terpisah (`target="_blank"`)**:
-   * Form pengujian langsung mengirim request ke endpoint dan membuka response JSON di tab baru tanpa me-reload atau meninggalkan halaman tester.
+1. **Pemisahan Modular Backend & Frontend**:
+   * Folder terpisah memisahkan logika server-side (PHP/MySQL) dari presentasi client-side (HTML/Tailwind), meningkatkan skalabilitas proyek.
+2. **UI Tester Bersih & Minimalis**:
+   * Halaman tester bebas dari emoji dan teks teknis yang berlebihan, menggunakan aksen warna tombol `#3b82f6` yang konsisten.
+3. **Pemisahan Stylesheet**:
+   * CSS pada halaman tester dipisahkan ke [backend/tester/style.css](backend/tester/style.css) untuk kerapian kode.
+4. **Pengujian Non-Blocking (`target="_blank"`)**:
+   * Form pengujian membuka respon JSON di tab baru sehingga halaman tester tetap dapat digunakan secara terus-menerus.
+5. **Portal Landing Page (`index.php`)**:
+   * Dilengkapi halaman navigasi terpadu dengan desain Tailwind CSS untuk memudahkan akses ke dashboard frontend maupun tester backend.
 
 ---
 
-### Panduan Instalasi & Menjalankan
+### Panduan Menjalankan
 
 1. **Clone Repositori**:
    ```bash
    git clone https://github.com/ratikapitrianifict/pemweb11.git
    ```
-2. **Import Database**:
-   * Buka phpMyAdmin di Laragon.
-   * Import file `database.sql` atau eksekusi query pembuatan database `api_lab` dan tabel `tasks`.
-3. **Akses Pengujian**:
-   * Buka browser dan arahkan ke: `http://localhost/task-api-lab/tester/`
+2. **Setup Database**:
+   * Pastikan Apache & MySQL aktif di Laragon.
+   * Import file `backend/database.sql` ke database `api_lab`.
+3. **Akses Aplikasi**:
+   * **Portal Utama**: `http://localhost/task-api-lab/`
+   * **Frontend Dashboard**: `http://localhost/task-api-lab/frontend/`
+   * **Backend API Tester**: `http://localhost/task-api-lab/backend/tester/`
+   * **Endpoint API Tasks**: `http://localhost/task-api-lab/backend/api/tasks/read.php`
