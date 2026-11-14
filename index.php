@@ -37,7 +37,7 @@
                 <p class="text-slate-600 text-sm mb-6 leading-relaxed">
                     Tampilan dashboard produk (Laptop, Keyboard, Mouse, dll.) responsif berbasis utility-first Tailwind CSS, terhubung asinkron via AJAX (fetch).
                 </p>
-                <a href="frontend/index.html" class="inline-flex items-center justify-center w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl transition text-sm">
+                <a href="frontend/index.php" class="inline-flex items-center justify-center w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl transition text-sm">
                     Buka Product Dashboard &rarr;
                 </a>
             </div>

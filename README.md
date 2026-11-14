@@ -28,7 +28,7 @@ task-api-lab/
 │   └── database.sql                       # Skema database api_lab & data produk
 │
 ├── frontend/                              # MODUL 11D: Tailwind CSS Product Dashboard
-│   ├── index.html                         # Tailwind Product Dashboard (Modul 11D)
+│   ├── index.php                          # Tailwind Product Dashboard (Modul 11D)
 │   └── app.js                             # AJAX Client (fetch) terhubung ke API backend
 │
 ├── database.sql                           # Salinan skema database root
